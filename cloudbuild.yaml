@@ -7,23 +7,26 @@ steps:
 
   # 2. Build de la imagen Docker
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/mi-app/imagen:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/mi-app-devops/imagen:$COMMIT_SHA', '.']
 
   # 3. Push a Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/mi-app/imagen:$COMMIT_SHA']
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/mi-app-devops/imagen:$COMMIT_SHA']
 
-  # 4. Deploy en Cloud Run (sin downtime)
+  # 4. Deploy en Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       - gcloud
       - run
       - deploy
-      - mi-app
-      - --image=us-central1-docker.pkg.dev/$PROJECT_ID/mi-app/imagen:$COMMIT_SHA
+      - mi-app-devops
+      - --image=us-central1-docker.pkg.dev/$PROJECT_ID/mi-app-devops/imagen:$COMMIT_SHA
       - --region=us-central1
       - --platform=managed
       - --allow-unauthenticated
 
 images:
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/mi-app/imagen:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/mi-app-devops/imagen:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
